@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Home from '../page';
 
-// Define a mutable mock object
 const mockSystemHealth = {
   status: "healthy",
   network: "offline",
@@ -12,7 +11,6 @@ const mockSystemHealth = {
   cpuModel: "Intel i5-8250U @ 1.6GHz",
 };
 
-// Mock mock-data module, using getter to allow dynamic changes
 jest.mock('@/lib/mock-data', () => {
   const actual = jest.requireActual('@/lib/mock-data');
   return {
@@ -25,7 +23,6 @@ jest.mock('@/lib/mock-data', () => {
 
 describe('SomaPulse Home Page', () => {
   beforeEach(() => {
-    // Reset to defaults
     mockSystemHealth.status = "healthy";
     mockSystemHealth.network = "offline";
     mockSystemHealth.whisperLoaded = true;
@@ -34,46 +31,35 @@ describe('SomaPulse Home Page', () => {
 
   it('renders stats, system status, and components successfully', () => {
     render(<Home />);
-    
-    // Check header title
+
     expect(screen.getByRole('heading', { name: /SomaPulse/i })).toBeInTheDocument();
-    
-    // Check System Status Info
     expect(screen.getByText('NETWORK OFFLINE')).toBeInTheDocument();
     expect(screen.getByText('WHISPER ✓')).toBeInTheDocument();
     expect(screen.getByText('SAPBERT ✓')).toBeInTheDocument();
-    
-    // Check triage result panel default
     expect(screen.getByRole('heading', { name: /Acute Diarrhea & Dehydration Protocol/i })).toBeInTheDocument();
   });
 
   it('handles clicking on demo queries to select different triage results', () => {
     render(<Home />);
-    
-    // Select "Fever" demo query (index 1)
+
     const feverButton = screen.getByRole('button', { name: /Fever/i });
     fireEvent.click(feverButton);
-    
     expect(screen.getByRole('heading', { name: /Severe Hyperpyrexia & Acute Tonsillitis\/Meningitis Protocol/i })).toBeInTheDocument();
 
-    // Select "Breathing" demo query (index 2)
     const breathingButton = screen.getByRole('button', { name: /Breathing/i });
     fireEvent.click(breathingButton);
-    
     expect(screen.getByRole('heading', { name: /Acute Bronchial Constriction Protocol/i })).toBeInTheDocument();
   });
 
   it('handles toggling voice recording state', () => {
     render(<Home />);
-    
+
     const recordButton = screen.getByRole('button', { name: /START RECORDING/i });
     expect(recordButton).toBeInTheDocument();
-    
-    // Click to start recording
+
     fireEvent.click(recordButton);
     expect(screen.getByText(/STOP RECORDING/i)).toBeInTheDocument();
-    
-    // Click to stop recording
+
     fireEvent.click(screen.getByText(/STOP RECORDING/i));
     expect(screen.getByText(/START RECORDING/i)).toBeInTheDocument();
   });
@@ -88,5 +74,45 @@ describe('SomaPulse Home Page', () => {
     expect(screen.getByText('NETWORK ONLINE')).toBeInTheDocument();
     expect(screen.getByText('WHISPER ✗')).toBeInTheDocument();
     expect(screen.getByText('SAPBERT ✗')).toBeInTheDocument();
+  });
+
+  it('renders the SapBERT vocabulary mapping table with colloquial terms', () => {
+    render(<Home />);
+
+    expect(screen.getByText('SapBERT Vocabulary Mapping')).toBeInTheDocument();
+    expect(screen.getByText(/running stomach/i)).toBeInTheDocument();
+    expect(screen.getByText(/fire in the chest/i)).toBeInTheDocument();
+    expect(screen.getByText('C0018684')).toBeInTheDocument();
+  });
+
+  it('renders the pipeline benchmark section with all stages', () => {
+    render(<Home />);
+
+    expect(screen.getByText(/Pipeline Benchmark/i)).toBeInTheDocument();
+    expect(screen.getByText('Whisper Transcription')).toBeInTheDocument();
+    expect(screen.getByText('SapBERT Embedding')).toBeInTheDocument();
+    expect(screen.getByText('sqlite-vec Query')).toBeInTheDocument();
+    expect(screen.getByText('Total Pipeline')).toBeInTheDocument();
+  });
+
+  it('renders contraindication warnings for the default diarrhea protocol', () => {
+    render(<Home />);
+
+    expect(screen.getByText('CONTRAINDICATIONS')).toBeInTheDocument();
+    expect(screen.getByText(/loperamide/i)).toBeInTheDocument();
+  });
+
+  it('renders the offline banner and edge status indicator', () => {
+    render(<Home />);
+
+    expect(screen.getByText(/ALL NETWORK INTERFACES DISABLED/i)).toBeInTheDocument();
+    expect(screen.getByText('EDGE DEPLOYMENT')).toBeInTheDocument();
+  });
+
+  it('renders footer with correct offline branding', () => {
+    render(<Home />);
+
+    expect(screen.getByText(/SomaPulse.*UOE Summer of Code 2026/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Whisper\.cpp.*SapBERT.*sqlite-vec/i).length).toBeGreaterThanOrEqual(1);
   });
 });
