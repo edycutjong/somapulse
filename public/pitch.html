@@ -1,322 +1,371 @@
 <!DOCTYPE html>
-<!--
-  SomaPulse Pitch Deck — UOE Summer of Code 2026
-  Navigation: ← → arrows, spacebar advances, ESC for grid overview
-  Presenter mode: P key | Contrast debug: C key
-  Print to PDF: Cmd+P → Save as PDF → Landscape → Clean 10-page deck
--->
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SomaPulse — Pitch Deck</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #0a100f;
-  --primary: #22c55e;
-  --accent: #06b6d4;
-  --text: #e8f5e9;
-  --muted: #4a7c59;
-  --surface: #111a17;
-  --danger: #ef4444;
-  --warning: #f59e0b;
-  --font-display: "Inter Tight", "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
-}
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { background: var(--bg); color: var(--text); font-family: var(--font-display); overflow: hidden; height: 100%; }
-.stage { width: 1920px; height: 1080px; position: relative; transform-origin: top left; }
-.slide { width: 1920px; height: 1080px; position: absolute; top: 0; left: 0; display: none; padding: 80px 120px; overflow: hidden; }
-.slide.active { display: flex; }
-.slide-counter { position: fixed; bottom: 24px; right: 40px; font: 600 14px/1 var(--font-mono); color: var(--muted); z-index: 100; }
-aside.speaker-notes { display: none; }
-body.presenter aside.speaker-notes { display: block; position: fixed; bottom: 0; left: 0; right: 0; height: 20%; background: #000; color: #aaa; font: 14px/1.6 var(--font-mono); padding: 20px 40px; border-top: 2px solid var(--primary); z-index: 200; }
-.badge { display: inline-block; font: 600 14px/1 var(--font-mono); padding: 8px 20px; border-radius: 100px; background: rgba(34,197,94,0.15); color: var(--primary); border: 1px solid rgba(34,197,94,0.3); text-transform: uppercase; letter-spacing: 2px; }
-.big-number { font: 900 120px/1 var(--font-display); color: var(--primary); text-shadow: 0 0 60px rgba(34,197,94,0.4); }
-.mono { font-family: var(--font-mono); }
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
-h1 { font: 900 72px/1.05 var(--font-display); }
-h2 { font: 700 48px/1.1 var(--font-display); }
-h3 { font: 600 32px/1.2 var(--font-display); }
-p, li { font: 400 20px/1.6 var(--font-display); color: #a7d8a7; }
-.label { font: 600 12px/1 var(--font-mono); color: var(--muted); text-transform: uppercase; letter-spacing: 3px; }
-.card { background: rgba(17,26,23,0.6); border: 1px solid rgba(34,197,94,0.1); border-radius: 16px; padding: 40px; }
-.glow { box-shadow: 0 0 40px rgba(34,197,94,0.15); }
-.terminal { background: #0d1210; border: 1px solid rgba(34,197,94,0.2); border-radius: 12px; padding: 32px; font: 16px/1.8 var(--font-mono); color: var(--primary); }
-@page { size: 16in 9in landscape; margin: 0; }
-@media print {
-  html, body, .slide { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .slide { display: block !important; page-break-after: always; break-inside: avoid; position: relative; }
-  .slide-counter, aside.speaker-notes { display: none !important; }
-  .stage { transform: none !important; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SomaPulse — Pitch Deck</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-display { font-family: 'Outfit', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .slide { display: none; opacity: 0; transition: opacity 0.4s ease; }
+    .slide.active { display: flex; opacity: 1; }
+    .glass { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); border: 1px solid rgba(148, 163, 184, 0.08); }
+    .glow-amber { box-shadow: 0 0 40px rgba(245, 158, 11, 0.12), inset 0 1px 0 rgba(245, 158, 11, 0.08); }
+    .glow-red { box-shadow: 0 0 40px rgba(239, 68, 68, 0.12); }
+    .accent-line { width: 48px; height: 3px; background: #f59e0b; border-radius: 2px; }
+    .stat-card { background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.4)); border: 1px solid rgba(245, 158, 11, 0.15); }
+    @keyframes pulse-offline { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+    .pulse-offline { animation: pulse-offline 2s ease-in-out infinite; }
+    .flow-arrow { color: #f59e0b; font-size: 1.5rem; }
+    .slide-number { font-variant-numeric: tabular-nums; }
+    .pipeline-bar { height: 6px; border-radius: 3px; background: linear-gradient(90deg, #f59e0b, #06b6d4); }
+    @media (max-width: 768px) {
+      h1 { font-size: 2.5rem !important; }
+      h2 { font-size: 1.75rem !important; }
+    }
+  </style>
 </head>
-<body>
-<div class="stage" id="stage">
+<body class="bg-[#09090b] text-slate-100 h-full overflow-hidden flex flex-col">
 
-<!-- SLIDE 1: COVER -->
-<div class="slide active" style="flex-direction:column;justify-content:center;align-items:flex-start;background:linear-gradient(135deg,#0a100f 0%,#111a17 50%,#0d1614 100%);">
-  <div class="badge" style="margin-bottom:40px;">Built for UOE Summer of Code 2026</div>
-  <h1 style="margin-bottom:20px;">SomaPulse</h1>
-  <h3 style="color:#81c784;font-weight:400;max-width:900px;">Offline-first medical triage at the edge — zero cloud, zero network, zero excuses</h3>
-  <div style="position:absolute;right:120px;bottom:120px;">
-    <div class="terminal" style="width:500px;">
-      <span style="color:var(--muted);">$ somapulse --mode edge</span><br>
-      <span style="color:var(--primary);">✓ Whisper.cpp loaded (16-bit GGML)</span><br>
-      <span style="color:var(--primary);">✓ SapBERT ONNX initialized (384-dim)</span><br>
-      <span style="color:var(--primary);">✓ sqlite-vec: 142 protocols indexed</span><br>
-      <span style="color:var(--accent);">⚡ Ready — 0 network interfaces active</span><br>
-      <span style="color:var(--muted);opacity:0.6;">█</span>
-    </div>
-  </div>
-  <aside class="speaker-notes">Open with the terminal boot sequence. SomaPulse loads entirely locally — no network needed. Whisper for speech, SapBERT for medical NLP, sqlite-vec for protocol lookup.</aside>
-</div>
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none"></div>
 
-<!-- SLIDE 2: HOOK -->
-<div class="slide" style="flex-direction:column;justify-content:center;align-items:center;text-align:center;background:var(--bg);">
-  <div class="big-number">48%</div>
-  <h3 style="color:#81c784;margin-top:24px;max-width:800px;">of global hospitals lose cloud connectivity during natural disasters — exactly when they need AI the most</h3>
-  <aside class="speaker-notes">WHO statistic: 48% of healthcare facilities lose network connectivity during major disasters. Cloud AI becomes useless exactly when it's most needed.</aside>
-</div>
+  <div class="flex-1 flex items-center justify-center p-6 md:p-12 relative z-10">
 
-<!-- SLIDE 3: PROBLEM -->
-<div class="slide" style="flex-direction:column;justify-content:center;background:var(--bg);">
-  <div class="label" style="margin-bottom:16px;">THE PROBLEM</div>
-  <h2 style="margin-bottom:40px;max-width:1000px;">A nurse in rural Malawi says<br/><span style="color:var(--warning);">"running stomach"</span> into her phone.<br/>Cloud AI returns <span style="color:var(--danger);">nothing</span>.</h2>
-  <div class="grid-3" style="max-width:1400px;">
-    <div class="card">
-      <h3 style="color:var(--danger);margin-bottom:12px;">No Internet</h3>
-      <p>Disaster zones and rural areas have zero connectivity. Cloud-based AI tools are dead on arrival.</p>
-    </div>
-    <div class="card">
-      <h3 style="color:var(--warning);margin-bottom:12px;">Language Barrier</h3>
-      <p>"Running stomach" → Gastroenteritis. "Hot body" → Hyperpyrexia. Clinical NLP fails on colloquial terms.</p>
-    </div>
-    <div class="card">
-      <h3 style="color:var(--danger);margin-bottom:12px;">Cloud Cost</h3>
-      <p>4 API subscriptions + satellite uplink + HIPAA compliance overhead = thousands of dollars per month.</p>
-    </div>
-  </div>
-  <aside class="speaker-notes">Paint the scene: rural health worker, no internet, colloquial medical language. Cloud AI requires internet, uses generic NLP, and costs thousands. SomaPulse solves all three.</aside>
-</div>
-
-<!-- SLIDE 4: SOLUTION -->
-<div class="slide" style="flex-direction:column;justify-content:center;background:var(--bg);">
-  <div class="label" style="margin-bottom:16px;">THE SOLUTION</div>
-  <h2 style="margin-bottom:40px;">Clinical AI that runs on a single laptop.</h2>
-  <div style="display:flex;gap:60px;align-items:flex-start;">
-    <div style="flex:1;">
-      <div class="card glow" style="margin-bottom:24px;">
-        <h3 style="color:var(--primary);margin-bottom:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-0.125em;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg> Edge Transcription</h3>
-        <p>Whisper.cpp compiled to C++ — 38ms p50 transcription on CPU. No GPU, no cloud.</p>
+    <!-- Slide 01: Title -->
+    <div class="slide active max-w-5xl w-full flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-amber-400 uppercase mb-6">Slide 01 · Title</span>
+        <h1 class="text-6xl md:text-7xl font-black tracking-tighter leading-[0.9] mb-6">
+          SOMA<span class="text-amber-400">PULSE</span>
+        </h1>
+        <div class="accent-line mb-6"></div>
+        <p class="text-slate-400 text-lg max-w-lg leading-relaxed">
+          Offline-first medical triage and diagnostic translation — running speech-to-text and biomedical AI on a $300 laptop with zero internet.
+        </p>
+        <div class="flex items-center gap-3 mt-8">
+          <span class="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-amber-500/20 text-amber-400 rounded-full">UOE Summer of Code 2026</span>
+          <span class="px-3 py-1 text-[10px] font-mono uppercase tracking-wider border border-red-500/20 text-red-400 rounded-full pulse-offline">OFFLINE</span>
+        </div>
       </div>
-      <div class="card glow" style="margin-bottom:24px;">
-        <h3 style="color:var(--accent);margin-bottom:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-0.125em;"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg> SapBERT Mapping</h3>
-        <p>Biomedical ONNX model maps colloquial terms to UMLS clinical concepts with 91%+ similarity.</p>
-      </div>
-      <div class="card glow">
-        <h3 style="color:var(--warning);margin-bottom:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-0.125em;"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><path d="m8.5 8.5 7 7"/></svg> Protocol Retrieval</h3>
-        <p>sqlite-vec cosine search against 142 pre-indexed medical protocols. Action steps + contraindications.</p>
+      <div class="flex-1 glass glow-amber rounded-2xl p-8 max-w-md w-full">
+        <span class="text-[10px] font-mono text-slate-600 uppercase tracking-wider block mb-4">Edge System Status</span>
+        <div class="space-y-3 font-mono text-xs text-slate-400">
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500 pulse-offline"></span> Network: OFFLINE</div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Whisper.cpp: LOADED</div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> SapBERT ONNX: LOADED</div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> sqlite-vec: 142 protocols</div>
+          <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-cyan-500"></span> RAM: 1.18 GB</div>
+        </div>
       </div>
     </div>
-    <!-- SWAP: replace with dashboard.png -->
-    <div style="flex:1;background:var(--surface);border-radius:16px;border:1px solid rgba(34,197,94,0.2);height:560px;display:flex;align-items:center;justify-content:center;">
-      <img src="https://placehold.co/600x500/111a17/22c55e?text=Triage+Console" alt="Dashboard" style="border-radius:12px;max-width:100%;"/>
-    </div>
-  </div>
-  <aside class="speaker-notes">Three-stage pipeline: Whisper transcribes speech, SapBERT maps to clinical concepts, sqlite-vec retrieves matching protocols. Total pipeline: under 120ms.</aside>
-</div>
 
-<!-- SLIDE 5: ARCHITECTURE -->
-<div class="slide" style="flex-direction:column;justify-content:center;background:var(--bg);">
-  <div class="label" style="margin-bottom:16px;">HOW IT WORKS</div>
-  <h2 style="margin-bottom:40px;">Architecture — Pure Edge</h2>
-  <div style="display:flex;gap:24px;align-items:center;justify-content:center;">
-    <div class="card" style="text-align:center;min-width:220px;">
-      <div class="label">Input</div>
-      <h3 style="margin-top:8px;"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:-0.125em;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg> Voice</h3>
-      <p class="mono" style="font-size:14px;color:var(--muted);">HTML5 Audio API</p>
-    </div>
-    <div style="font-size:32px;color:var(--primary);">→</div>
-    <div class="card" style="text-align:center;min-width:220px;">
-      <div class="label">Transcription</div>
-      <h3 style="margin-top:8px;">Whisper.cpp</h3>
-      <p class="mono" style="font-size:14px;color:var(--muted);">16-bit GGML · 38ms</p>
-    </div>
-    <div style="font-size:32px;color:var(--primary);">→</div>
-    <div class="card" style="text-align:center;min-width:220px;">
-      <div class="label">Embeddings</div>
-      <h3 style="margin-top:8px;">SapBERT</h3>
-      <p class="mono" style="font-size:14px;color:var(--muted);">ONNX · 384-dim</p>
-    </div>
-    <div style="font-size:32px;color:var(--primary);">→</div>
-    <div class="card" style="text-align:center;min-width:220px;">
-      <div class="label">Search</div>
-      <h3 style="margin-top:8px;">sqlite-vec</h3>
-      <p class="mono" style="font-size:14px;color:var(--muted);">Cosine · 8ms</p>
-    </div>
-  </div>
-  <div style="margin-top:40px;display:flex;gap:24px;justify-content:center;">
-    <span class="badge" style="font-size:12px;background:rgba(239,68,68,0.15);color:var(--danger);border-color:rgba(239,68,68,0.3);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Network</span>
-    <span class="badge" style="font-size:12px;background:rgba(239,68,68,0.15);color:var(--danger);border-color:rgba(239,68,68,0.3);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No GPU</span>
-    <span class="badge" style="font-size:12px;background:rgba(239,68,68,0.15);color:var(--danger);border-color:rgba(239,68,68,0.3);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" style="vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Cloud API</span>
-    <span class="badge" style="font-size:12px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg> 1.2GB RAM Total</span>
-  </div>
-  <aside class="speaker-notes">Emphasize what's NOT needed: no network, no GPU, no cloud API. The entire pipeline runs in 1.2GB RAM on a 2018-era laptop CPU.</aside>
-</div>
-
-<!-- SLIDE 6: DEMO -->
-<div class="slide" style="flex-direction:column;justify-content:center;background:var(--bg);">
-  <div class="label" style="margin-bottom:16px;">LIVE DEMO</div>
-  <h2 style="margin-bottom:40px;">Speak. Match. Treat.</h2>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
-    <div class="card" style="position:relative;">
-      <div style="position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0a100f;">1</div>
-      <img src="https://placehold.co/700x350/111a17/22c55e?text=Voice+Recording" alt="Voice" style="width:100%;border-radius:8px;margin-top:16px;"/>
-      <p style="margin-top:12px;font-size:16px;">Nurse speaks symptoms in colloquial language</p>
-    </div>
-    <div class="card" style="position:relative;">
-      <div style="position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0a100f;">2</div>
-      <img src="https://placehold.co/700x350/111a17/06b6d4?text=Protocol+Match" alt="Protocol" style="width:100%;border-radius:8px;margin-top:16px;"/>
-      <p style="margin-top:12px;font-size:16px;">SapBERT maps to clinical term → protocol retrieved in 8ms</p>
-    </div>
-    <div class="card" style="position:relative;">
-      <div style="position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0a100f;">3</div>
-      <img src="https://placehold.co/700x350/111a17/f59e0b?text=Action+Steps" alt="Steps" style="width:100%;border-radius:8px;margin-top:16px;"/>
-      <p style="margin-top:12px;font-size:16px;">Numbered action steps with dosage instructions</p>
-    </div>
-    <div class="card" style="position:relative;">
-      <div style="position:absolute;top:16px;left:16px;width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#0a100f;">4</div>
-      <img src="https://placehold.co/700x350/111a17/ef4444?text=Contraindications" alt="Warnings" style="width:100%;border-radius:8px;margin-top:16px;"/>
-      <p style="margin-top:12px;font-size:16px;">Critical contraindication warnings displayed prominently</p>
-    </div>
-  </div>
-  <aside class="speaker-notes">Walk through: 1. Speak symptoms. 2. Protocol match with similarity score. 3. Numbered action steps. 4. Drug contraindication warnings — life-critical information.</aside>
-</div>
-
-<!-- SLIDE 7: FEATURES -->
-<div class="slide" style="flex-direction:column;justify-content:center;background:var(--bg);">
-  <div class="label" style="margin-bottom:16px;">KEY FEATURES</div>
-  <h2 style="margin-bottom:48px;">What makes it different</h2>
-  <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;">
-    <div class="card glow" style="grid-row:span 2;">
-      <div style="margin-bottom:16px;"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/></svg></div>
-      <h3 style="color:var(--primary);margin-bottom:12px;">SapBERT Vocabulary Bridge</h3>
-      <p>Maps colloquial symptom descriptions to UMLS clinical concepts. "Running stomach" → Gastroenteritis (C0018684). 91.2% similarity scores.</p>
-    </div>
-    <div class="card">
-      <div style="margin-bottom:8px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></div>
-      <h3 style="font-size:22px;margin-bottom:8px;">38ms Transcription</h3>
-      <p style="font-size:16px;">Whisper.cpp compiled to C++, running on CPU only.</p>
-    </div>
-    <div class="card">
-      <div style="margin-bottom:8px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7z"/><path d="m8.5 8.5 7 7"/></svg></div>
-      <h3 style="font-size:22px;margin-bottom:8px;">142 Protocols</h3>
-      <p style="font-size:16px;">Pre-seeded medical guidelines with action steps.</p>
-    </div>
-    <div class="card">
-      <div style="margin-bottom:8px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--warning)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
-      <h3 style="font-size:22px;margin-bottom:8px;">Contraindication Alerts</h3>
-      <p style="font-size:16px;">Critical drug interactions displayed immediately.</p>
-    </div>
-    <div class="card">
-      <div style="margin-bottom:8px;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg></div>
-      <h3 style="font-size:22px;margin-bottom:8px;">$0 Cloud Cost</h3>
-      <p style="font-size:16px;">Runs on a $300 field laptop. No subscriptions.</p>
-    </div>
-  </div>
-  <aside class="speaker-notes">The SapBERT vocabulary bridge is the innovation. It's not just speech-to-text — it translates colloquial medical language into formal clinical ontology.</aside>
-</div>
-
-<!-- SLIDE 8: WHY NOW -->
-<div class="slide" style="flex-direction:column;justify-content:center;background:var(--bg);">
-  <div class="label" style="margin-bottom:16px;">WHY NOW</div>
-  <h2 style="margin-bottom:40px;">Edge AI models crossed the threshold</h2>
-  <div style="display:flex;gap:60px;align-items:center;">
-    <div style="flex:1;">
-      <div style="margin-bottom:32px;">
-        <span class="mono" style="font-size:64px;color:var(--primary);font-weight:900;">1.2GB</span>
-        <p style="margin-top:8px;">Total RAM footprint — fits on any modern laptop</p>
-      </div>
-      <div style="margin-bottom:32px;">
-        <span class="mono" style="font-size:64px;color:var(--accent);font-weight:900;">94ms</span>
-        <p style="margin-top:8px;">Full pipeline latency (p95) — real-time clinical response</p>
-      </div>
-      <div>
-        <span class="mono" style="font-size:64px;color:var(--warning);font-weight:900;">$0</span>
-        <p style="margin-top:8px;">Recurring cost — no API keys, no subscriptions</p>
+    <!-- Slide 02: The Problem -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 02 · The Problem</span>
+      <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+        When Disasters Strike,<br/>
+        <span class="text-red-400">Networks Die First.</span>
+      </h2>
+      <div class="accent-line"></div>
+      <p class="text-slate-400 max-w-2xl leading-relaxed text-lg">
+        Rural health workers face a deadly double-bottleneck: no internet to access cloud AI, and no way to translate local symptom descriptions into clinical protocols.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        <div class="glass rounded-xl p-6 glow-red">
+          <span class="text-red-400 font-mono text-xs uppercase tracking-wider">Bottleneck 1</span>
+          <h3 class="text-xl font-bold mt-2 mb-2">No Cloud Access</h3>
+          <p class="text-slate-400 text-sm">Cellular grids collapse in disasters. Cloud-based AI tools become unreachable exactly when needed most.</p>
+        </div>
+        <div class="glass rounded-xl p-6 glow-red">
+          <span class="text-red-400 font-mono text-xs uppercase tracking-wider">Bottleneck 2</span>
+          <h3 class="text-xl font-bold mt-2 mb-2">Vocabulary Gap</h3>
+          <p class="text-slate-400 text-sm">"Running stomach" ≠ medical lookup. Local symptom terms don't map to clinical protocols without semantic bridging.</p>
+        </div>
       </div>
     </div>
-    <div class="card" style="flex:1;padding:48px;">
-      <h3 style="margin-bottom:24px;">Convergence</h3>
-      <p style="margin-bottom:16px;">Whisper.cpp and ONNX runtime make production-grade inference possible on CPU-only hardware.</p>
-      <p style="margin-bottom:16px;">SapBERT (2021) and sqlite-vec (2024) enabled domain-specific embeddings + local vector search.</p>
-      <p>Climate disasters are increasing — the WHO reports field connectivity dropping 48% during emergencies.</p>
-    </div>
-  </div>
-  <aside class="speaker-notes">Three trends: Edge models are now small enough for laptops, domain-specific NLP (SapBERT) is mature, and climate disasters make offline capability critical.</aside>
-</div>
 
-<!-- SLIDE 9: TRACTION -->
-<div class="slide" style="flex-direction:column;justify-content:center;background:var(--bg);">
-  <div class="label" style="margin-bottom:16px;">TRACTION</div>
-  <h2 style="margin-bottom:40px;">Shipped in 48 hours</h2>
-  <div class="grid-3">
-    <div class="card" style="text-align:center;">
-      <span class="mono" style="font-size:56px;color:var(--primary);font-weight:900;">142</span>
-      <p style="margin-top:8px;">Medical protocols pre-indexed and searchable</p>
+    <!-- Slide 03: The Solution -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 03 · The Solution</span>
+      <h2 class="text-4xl md:text-5xl font-bold tracking-tight">
+        Clinical Intelligence.<br/>
+        <span class="text-amber-400">On the Edge.</span>
+      </h2>
+      <div class="accent-line"></div>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mt-4">
+        <div class="stat-card rounded-xl p-6 text-center">
+          <span class="text-3xl font-black text-amber-400">0</span>
+          <p class="text-slate-400 text-xs mt-2">Network calls. Runs 100% offline.</p>
+        </div>
+        <div class="stat-card rounded-xl p-6 text-center">
+          <span class="text-3xl font-black text-amber-400">38ms</span>
+          <p class="text-slate-400 text-xs mt-2">Whisper transcription latency (p50)</p>
+        </div>
+        <div class="stat-card rounded-xl p-6 text-center">
+          <span class="text-3xl font-black text-amber-400">120ms</span>
+          <p class="text-slate-400 text-xs mt-2">End-to-end triage pipeline</p>
+        </div>
+        <div class="stat-card rounded-xl p-6 text-center">
+          <span class="text-3xl font-black text-amber-400">$0</span>
+          <p class="text-slate-400 text-xs mt-2">Subscription cost. Forever free.</p>
+        </div>
+      </div>
     </div>
-    <div class="card" style="text-align:center;">
-      <span class="mono" style="font-size:56px;color:var(--accent);font-weight:900;">5</span>
-      <p style="margin-top:8px;">Vocabulary gap mappings validated (colloquial → clinical)</p>
-    </div>
-    <div class="card" style="text-align:center;">
-      <span class="mono" style="font-size:56px;color:var(--warning);font-weight:900;">100%</span>
-      <p style="margin-top:8px;">CI pipeline passing — lint, typecheck, build</p>
-    </div>
-  </div>
-  <div style="margin-top:48px;">
-    <h3 style="margin-bottom:24px;">Deliverables</h3>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;">
-      <span class="badge" style="font-size:11px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg> Next.js 16 Dashboard</span>
-      <span class="badge" style="font-size:11px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg> Voice Triage UI</span>
-      <span class="badge" style="font-size:11px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg> SapBERT Pipeline</span>
-      <span class="badge" style="font-size:11px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg> Protocol DB</span>
-      <span class="badge" style="font-size:11px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg> MIT Licensed</span>
-    </div>
-  </div>
-  <aside class="speaker-notes">142 protocols, 5 validated vocabulary mappings, full CI pipeline. All built in 48 hours. The architecture is production-ready — demo data proves the pipeline works.</aside>
-</div>
 
-<!-- SLIDE 10: THE ASK -->
-<div class="slide" style="flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(135deg,#0a100f 0%,#111a17 100%);">
-  <h1 style="margin-bottom:24px;">SomaPulse</h1>
-  <h3 style="color:#81c784;font-weight:400;margin-bottom:48px;max-width:700px;">When the network goes down, medicine shouldn't.</h3>
-  <div style="display:flex;gap:24px;margin-bottom:48px;">
-    <div class="card" style="padding:24px 40px;text-align:center;">
-      <div class="label">Live Demo</div>
-      <img src="https://placehold.co/120x120/111a17/22c55e?text=QR" alt="QR" style="margin-top:12px;border-radius:8px;"/>
+    <!-- Slide 04: Pipeline Flow -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 04 · Pipeline</span>
+      <h2 class="text-4xl font-bold tracking-tight mb-4">Edge Triage Pipeline</h2>
+      <div class="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+        <div class="glass rounded-xl p-5 flex-1 text-center">
+          <div class="text-2xl mb-2">🎤</div>
+          <h3 class="font-bold text-sm mb-1">Voice Input</h3>
+          <p class="text-slate-500 text-xs">HTML5 Audio capture from field responder</p>
+        </div>
+        <span class="flow-arrow hidden md:block">→</span>
+        <div class="glass rounded-xl p-5 flex-1 text-center">
+          <div class="text-2xl mb-2">📝</div>
+          <h3 class="font-bold text-sm mb-1">Whisper.cpp</h3>
+          <p class="text-slate-500 text-xs">16-bit GGML quantized local transcription</p>
+        </div>
+        <span class="flow-arrow hidden md:block">→</span>
+        <div class="glass rounded-xl p-5 flex-1 text-center">
+          <div class="text-2xl mb-2">🧬</div>
+          <h3 class="font-bold text-sm mb-1">SapBERT</h3>
+          <p class="text-slate-500 text-xs">384-dim biomedical embedding via ONNX</p>
+        </div>
+        <span class="flow-arrow hidden md:block">→</span>
+        <div class="glass rounded-xl p-5 flex-1 text-center">
+          <div class="text-2xl mb-2">💊</div>
+          <h3 class="font-bold text-sm mb-1">Protocol Match</h3>
+          <p class="text-slate-500 text-xs">sqlite-vec cosine similarity search</p>
+        </div>
+      </div>
+      <div class="mt-6">
+        <div class="flex justify-between text-[10px] font-mono text-slate-600 mb-1">
+          <span>0ms</span><span>38ms</span><span>72ms</span><span>120ms</span>
+        </div>
+        <div class="pipeline-bar w-full"></div>
+      </div>
     </div>
-    <div class="card" style="padding:24px 40px;text-align:center;">
-      <div class="label">GitHub</div>
-      <img src="https://placehold.co/120x120/111a17/06b6d4?text=QR" alt="QR" style="margin-top:12px;border-radius:8px;"/>
-    </div>
-  </div>
-  <p class="mono" style="color:var(--muted);font-size:16px;">Built by Edy Cu · UOE Summer of Code 2026</p>
-  <aside class="speaker-notes">Close with the mission: "When the network goes down, medicine shouldn't." Ask judges to try the live demo. Thank them for their time.</aside>
-</div>
 
-</div>
-<div class="slide-counter" id="counter">01 / 10</div>
-<script>
-const slides=document.querySelectorAll('.slide'),counter=document.getElementById('counter'),stage=document.getElementById('stage');let current=0;const total=slides.length;
-function show(n){slides.forEach(s=>s.classList.remove('active'));current=((n%total)+total)%total;slides[current].classList.add('active');counter.textContent=String(current+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');}
-function resize(){const s=Math.min(window.innerWidth/1920,window.innerHeight/1080);stage.style.transform=`scale(${s})`;}
-window.addEventListener('resize',resize);resize();
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();show(current+1);}if(e.key==='ArrowLeft'){e.preventDefault();show(current-1);}if(e.key==='p'||e.key==='P')document.body.classList.toggle('presenter');if(e.key==='c'||e.key==='C')document.querySelectorAll('h1,h2,h3,p,span,.label,.badge').forEach(el=>el.classList.toggle('contrast-check'));});
-</script>
+    <!-- Slide 05: Architecture -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 05 · Architecture</span>
+      <h2 class="text-4xl font-bold tracking-tight">Technical Architecture</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="glass rounded-xl p-6">
+          <span class="text-amber-400 font-mono text-xs uppercase tracking-wider">Frontend</span>
+          <h3 class="font-bold mt-2 mb-1">Next.js 16 + React 19</h3>
+          <p class="text-slate-400 text-sm">Military-grade SOC dashboard with Tailwind v4. High-contrast, dense data layout.</p>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <span class="text-amber-400 font-mono text-xs uppercase tracking-wider">Backend</span>
+          <h3 class="font-bold mt-2 mb-1">Python FastAPI</h3>
+          <p class="text-slate-400 text-sm">Async worker pool. Containerized for edge deployment on low-spec hardware.</p>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <span class="text-amber-400 font-mono text-xs uppercase tracking-wider">NLP Engine</span>
+          <h3 class="font-bold mt-2 mb-1">SapBERT (ONNX)</h3>
+          <p class="text-slate-400 text-sm">384-dimensional biomedical embeddings mapping colloquial terms to UMLS concepts.</p>
+        </div>
+        <div class="glass rounded-xl p-6">
+          <span class="text-amber-400 font-mono text-xs uppercase tracking-wider">Vector Store</span>
+          <h3 class="font-bold mt-2 mb-1">SQLite + sqlite-vec</h3>
+          <p class="text-slate-400 text-sm">Local cosine similarity search. Zero network dependency. Pre-seeded protocol DB.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 06: Vocabulary Bridge -->
+    <div class="slide max-w-5xl w-full flex-col md:flex-row items-center justify-between gap-12">
+      <div class="flex-1 flex flex-col items-start text-left">
+        <span class="text-xs font-mono tracking-widest text-amber-400 uppercase mb-6">Slide 06 · Innovation</span>
+        <h2 class="text-4xl font-bold tracking-tight mb-4">
+          SapBERT<br/>Vocabulary Bridge
+        </h2>
+        <div class="accent-line mb-6"></div>
+        <p class="text-slate-400 leading-relaxed">
+          Standard NLP models fail on colloquial medical terms. SapBERT is pre-trained on the UMLS Metathesaurus — it natively understands that <em class="text-amber-300">"running stomach"</em> maps to <em class="text-cyan-300">Diarrhea (C0011991)</em> with 0.94 cosine similarity.
+        </p>
+      </div>
+      <div class="flex-1 glass rounded-2xl p-6 max-w-md w-full">
+        <span class="text-[10px] font-mono text-slate-600 uppercase tracking-wider block mb-4">Mapping Table</span>
+        <div class="font-mono text-xs space-y-3">
+          <div class="flex justify-between border-b border-slate-800 pb-2"><span class="text-amber-300 italic">"running stomach"</span><span class="text-cyan-400">→ Diarrhea</span><span class="text-slate-500">C0011991</span></div>
+          <div class="flex justify-between border-b border-slate-800 pb-2"><span class="text-amber-300 italic">"fire in the chest"</span><span class="text-cyan-400">→ Heartburn</span><span class="text-slate-500">C0018684</span></div>
+          <div class="flex justify-between border-b border-slate-800 pb-2"><span class="text-amber-300 italic">"bone fire"</span><span class="text-cyan-400">→ Hyperpyrexia</span><span class="text-slate-500">C0015967</span></div>
+          <div class="flex justify-between"><span class="text-amber-300 italic">"wind trapped"</span><span class="text-cyan-400">→ Dyspnea</span><span class="text-slate-500">C0013404</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 07: Demo Highlights -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 07 · Live Demo</span>
+      <h2 class="text-4xl font-bold tracking-tight">What Judges Will See</h2>
+      <div class="accent-line"></div>
+      <div class="space-y-4 mt-4">
+        <div class="glass rounded-xl p-5 flex items-start gap-4">
+          <span class="text-amber-400 font-mono text-lg mt-0.5">01</span>
+          <div><h3 class="font-bold mb-1">Voice-to-Protocol in 120ms</h3><p class="text-slate-400 text-sm">Speak symptoms in colloquial terms → see matched clinical protocol with action steps and drug warnings</p></div>
+        </div>
+        <div class="glass rounded-xl p-5 flex items-start gap-4">
+          <span class="text-amber-400 font-mono text-lg mt-0.5">02</span>
+          <div><h3 class="font-bold mb-1">Contraindication Alerts</h3><p class="text-slate-400 text-sm">Automatic drug interaction warnings rendered with clinical urgency indicators</p></div>
+        </div>
+        <div class="glass rounded-xl p-5 flex items-start gap-4">
+          <span class="text-amber-400 font-mono text-lg mt-0.5">03</span>
+          <div><h3 class="font-bold mb-1">Zero Network Indicator</h3><p class="text-slate-400 text-sm">Persistent "ALL NETWORK INTERFACES DISABLED" banner proving true offline operation</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 08: Market -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 08 · Market</span>
+      <h2 class="text-4xl font-bold tracking-tight">Market Opportunity</h2>
+      <div class="accent-line"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+        <div class="stat-card rounded-xl p-6 text-center">
+          <span class="text-4xl font-black text-amber-400">3.6B</span>
+          <p class="text-slate-400 text-sm mt-2">People without reliable internet access</p>
+        </div>
+        <div class="stat-card rounded-xl p-6 text-center">
+          <span class="text-4xl font-black text-amber-400">50%</span>
+          <p class="text-slate-400 text-sm mt-2">Of global health facilities lack broadband</p>
+        </div>
+        <div class="stat-card rounded-xl p-6 text-center">
+          <span class="text-4xl font-black text-amber-400">$45B</span>
+          <p class="text-slate-400 text-sm mt-2">Global digital health market (2026)</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 09: Why Us -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 09 · Why Us</span>
+      <h2 class="text-4xl font-bold tracking-tight">Competitive Edge</h2>
+      <div class="accent-line"></div>
+      <div class="overflow-x-auto mt-4">
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left border-b border-slate-800">
+              <th class="py-3 pr-8 text-slate-500 font-mono text-xs uppercase">Feature</th>
+              <th class="py-3 pr-8 text-amber-400 font-mono text-xs uppercase">SomaPulse</th>
+              <th class="py-3 pr-8 text-slate-500 font-mono text-xs uppercase">Cloud AI</th>
+              <th class="py-3 text-slate-500 font-mono text-xs uppercase">Paper Manuals</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-400">
+            <tr class="border-b border-slate-900"><td class="py-2.5 pr-8">Internet Required</td><td class="pr-8 text-emerald-400">No</td><td class="pr-8">Yes</td><td>No</td></tr>
+            <tr class="border-b border-slate-900"><td class="py-2.5 pr-8">Dialect Support</td><td class="pr-8 text-emerald-400">SapBERT semantic</td><td class="pr-8">Limited</td><td>None</td></tr>
+            <tr class="border-b border-slate-900"><td class="py-2.5 pr-8">Latency</td><td class="pr-8 text-emerald-400">120ms</td><td class="pr-8">2-5 seconds</td><td>Minutes</td></tr>
+            <tr class="border-b border-slate-900"><td class="py-2.5 pr-8">Cost</td><td class="pr-8 text-emerald-400">$0 forever</td><td class="pr-8">$$$$/mo</td><td>Free</td></tr>
+            <tr><td class="py-2.5 pr-8">Drug Interactions</td><td class="pr-8 text-emerald-400">Automatic</td><td class="pr-8">Some</td><td>Manual lookup</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Slide 10: Roadmap -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 10 · Roadmap</span>
+      <h2 class="text-4xl font-bold tracking-tight">30 / 60 / 90-Day Plan</h2>
+      <div class="accent-line"></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+        <div class="glass rounded-xl p-6 border-t-2 border-t-amber-500">
+          <span class="text-amber-400 font-mono text-xs uppercase">30 Days</span>
+          <h3 class="font-bold mt-3 mb-2">Foundation</h3>
+          <ul class="text-slate-400 text-sm space-y-1.5">
+            <li>• Expand protocol database to 500+ conditions</li>
+            <li>• Add multi-language Whisper decoding</li>
+            <li>• Field-test on ARM-based tablets</li>
+          </ul>
+        </div>
+        <div class="glass rounded-xl p-6 border-t-2 border-t-cyan-500">
+          <span class="text-cyan-400 font-mono text-xs uppercase">60 Days</span>
+          <h3 class="font-bold mt-3 mb-2">Growth</h3>
+          <ul class="text-slate-400 text-sm space-y-1.5">
+            <li>• Partner with WHO field response teams</li>
+            <li>• Offline-sync for protocol updates</li>
+            <li>• Add triage severity scoring</li>
+          </ul>
+        </div>
+        <div class="glass rounded-xl p-6 border-t-2 border-t-emerald-500">
+          <span class="text-emerald-400 font-mono text-xs uppercase">90 Days</span>
+          <h3 class="font-bold mt-3 mb-2">Scale</h3>
+          <ul class="text-slate-400 text-sm space-y-1.5">
+            <li>• Indigenous dialect embedding fine-tuning</li>
+            <li>• Companion mobile app (PWA)</li>
+            <li>• Open-source protocol contribution portal</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 11: Team -->
+    <div class="slide max-w-5xl w-full flex-col text-left gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 11 · Team</span>
+      <h2 class="text-4xl font-bold tracking-tight">Built by Solo Engineers</h2>
+      <div class="accent-line"></div>
+      <div class="glass rounded-xl p-8 mt-4 max-w-lg">
+        <h3 class="font-bold text-xl mb-2">Edy Cu</h3>
+        <span class="text-amber-400 font-mono text-xs uppercase tracking-wider">Full-Stack Engineer</span>
+        <p class="text-slate-400 text-sm mt-3 leading-relaxed">
+          Solo developer building offline-first medical AI — from Whisper.cpp compilation to SapBERT ONNX optimization to production Next.js dashboards. Shipping healthcare tools that work without infrastructure.
+        </p>
+        <div class="flex gap-2 mt-4">
+          <span class="px-2.5 py-1 text-[10px] font-mono border border-slate-800 text-slate-500 rounded">FastAPI</span>
+          <span class="px-2.5 py-1 text-[10px] font-mono border border-slate-800 text-slate-500 rounded">ONNX</span>
+          <span class="px-2.5 py-1 text-[10px] font-mono border border-slate-800 text-slate-500 rounded">Next.js</span>
+          <span class="px-2.5 py-1 text-[10px] font-mono border border-slate-800 text-slate-500 rounded">SapBERT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 12: Conclusion -->
+    <div class="slide max-w-5xl w-full flex-col items-center text-center gap-8">
+      <span class="text-xs font-mono tracking-widest text-amber-400 uppercase">Slide 12 · Conclusion</span>
+      <h2 class="text-5xl md:text-6xl font-black tracking-tighter leading-tight">
+        Healthcare doesn't need<br/><span class="text-amber-400">the cloud.</span>
+      </h2>
+      <div class="accent-line mx-auto"></div>
+      <p class="text-slate-400 text-lg max-w-lg">
+        SomaPulse brings clinical intelligence to disaster zones — 120ms triage, zero internet, zero cost, completely self-contained on a single laptop.
+      </p>
+      <div class="flex items-center gap-4 mt-4">
+        <a href="https://github.com/edycutjong/somapulse" target="_blank" class="px-5 py-2.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 rounded-lg font-mono text-xs hover:bg-amber-500/20 transition-all">GitHub Repository</a>
+        <a href="/" class="px-5 py-2.5 bg-slate-800/50 border border-slate-700 text-slate-300 rounded-lg font-mono text-xs hover:bg-slate-800 transition-all">Live Dashboard</a>
+      </div>
+      <p class="text-slate-600 text-xs font-mono mt-8">SomaPulse · UOE Summer of Code 2026</p>
+    </div>
+
+  </div>
+
+  <footer class="h-14 border-t border-slate-900 bg-[#09090b]/80 backdrop-blur-lg flex items-center justify-between px-6 md:px-8 z-20 shrink-0">
+    <div class="text-[10px] font-mono text-slate-600 uppercase tracking-wider">SomaPulse · Pitch Deck</div>
+    <div class="flex items-center gap-4">
+      <button onclick="prevSlide()" class="px-4 py-1.5 border border-slate-800 hover:border-slate-600 rounded-lg text-xs font-mono text-slate-500 hover:text-slate-200 transition-all select-none">← PREV</button>
+      <span id="slide-num" class="text-xs font-mono text-amber-400 slide-number w-12 text-center">1 / 12</span>
+      <button onclick="nextSlide()" class="px-4 py-1.5 border border-slate-800 hover:border-slate-600 rounded-lg text-xs font-mono text-slate-500 hover:text-slate-200 transition-all select-none">NEXT →</button>
+    </div>
+  </footer>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const slideNum = document.getElementById('slide-num');
+    function updateSlides() { slides.forEach((s, i) => s.classList.toggle('active', i === currentSlide)); slideNum.textContent = `${currentSlide + 1} / ${slides.length}`; }
+    function prevSlide() { if (currentSlide > 0) { currentSlide--; updateSlides(); } }
+    function nextSlide() { if (currentSlide < slides.length - 1) { currentSlide++; updateSlides(); } }
+    document.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide(); if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextSlide(); } });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; });
+    document.addEventListener('touchend', (e) => { const dx = e.changedTouches[0].screenX - touchStartX; if (dx > 50) prevSlide(); if (dx < -50) nextSlide(); });
+  </script>
 </body>
 </html>
