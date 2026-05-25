@@ -47,19 +47,12 @@ body {
 }
 
 .glow-green { box-shadow: 0 0 20px var(--primary-glow); }
-.glow-cyan { box-shadow: 0 0 20px var(--accent-glow); }
 
 @keyframes pulse-glow {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
 .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
-
-@keyframes waveform {
-  0% { height: 4px; }
-  50% { height: 20px; }
-  100% { height: 4px; }
-}
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

@@ -38,6 +38,15 @@ When disasters strike, **communication grids collapse first**. Rural health work
 
 ## 🏗️ Architecture & Tech Stack
 
+```mermaid
+graph TD
+    Responder([Field Responder]) <-->|Audio Recording / Web UI| UI[Next.js 16 / React 19 Frontend]
+    UI <-->|Local API calls| API[Python FastAPI Backend]
+    API <-->|Speech Stream| Whisper[Whisper.cpp <br/> GGML 16-bit Quantized]
+    API <-->|Extract Symptoms| ONNX[SapBERT ONNX Runtime <br/> 384-dim Biomedical Embeddings]
+    API <-->|Vector Distance Query| SQLite[SQLite + sqlite-vec <br/> Cosine Similarity Search]
+```
+
 | Layer | Technology |
 |---|---|
 | **Frontend** | Next.js 16 (App Router), React 19, Tailwind CSS v4 |
@@ -77,7 +86,7 @@ python bench.py  # Validates full pipeline meets <200ms target (p50: ~58ms, p95:
 **48 passing tests** across 4 test suites — covering mock data integrity, component rendering, interactive triage selection, voice recording state, vocabulary mapping validation, UMLS code format checks, and edge/offline system health branching.
 
 ```bash
-npm test              # Run all 47 tests
+npm test              # Run all 48 tests
 npm run test:coverage # Coverage report
 npm run lint          # ESLint
 npm run typecheck     # TypeScript check
@@ -89,7 +98,7 @@ CI runs on Node.js 20, 22, and 24 via GitHub Actions on every push.
 
 ## 📁 Project Structure
 ```
-somapulse/
+devpost-uoe-somapulse/
 ├── docs/              # README assets
 ├── src/
 │   ├── app/           # Next.js pages + __tests__/
