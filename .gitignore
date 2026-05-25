@@ -45,3 +45,6 @@ next-env.d.ts
 # Generated assets
 assets/
 
+# Generated database (reproducible via seed.py)
+protocols.db
+

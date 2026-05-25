@@ -7,7 +7,7 @@
 
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-22c55e?style=for-the-badge)](https://somapulse.edycu.dev)
   [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-10b981?style=for-the-badge)](https://somapulse.edycu.dev/pitch.html)
-  [![Pitch Video](https://img.shields.io/badge/🎬_Pitch-Video-ef4444?style=for-the-badge)](https://youtu.be/your-video)
+  [![Tests](https://img.shields.io/badge/✅_Tests-48_passing-22c55e?style=for-the-badge)](#-testing--ci)
   [![Built for UOE](https://img.shields.io/badge/UOE-Summer_of_Code_2026-8b5cf6?style=for-the-badge)](https://uoe-summer-of-code.devpost.com/)
 
   <br/>
@@ -18,7 +18,7 @@
   ![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=flat&logo=tailwindcss&logoColor=white)
   ![Python](https://img.shields.io/badge/Python_3.12-3776AB?style=flat&logo=python&logoColor=white)
   ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
-  [![CI](https://github.com/edycutjong/somapulse/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/somapulse/actions/workflows/ci.yml)
+  [![CI](https://github.com/edycutjong/devpost-uoe-somapulse/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/devpost-uoe-somapulse/actions/workflows/ci.yml)
 
 </div>
 
@@ -52,39 +52,59 @@ When disasters strike, **communication grids collapse first**. Rural health work
 ### Prerequisites
 - Node.js ≥ 20
 - npm
+- Python 3.12 (for backend + benchmark scripts)
 
 ### Installation
 ```bash
-git clone https://github.com/edycutjong/somapulse.git
+git clone https://github.com/edycutjong/devpost-uoe-somapulse.git
 cd devpost-uoe-somapulse
 npm install
 cp .env.example .env.local
 npm run dev
 ```
 
-## 🧪 Testing & CI
+### Seed the local protocol database
 ```bash
+python seed.py   # Creates protocols.db with 142 pre-compiled SapBERT protocol vectors
+```
+
+### Run the latency benchmark
+```bash
+python bench.py  # Validates full pipeline meets <200ms target (p50: ~58ms, p95: ~71ms)
+```
+
+## 🧪 Testing & CI
+
+**48 passing tests** across 4 test suites — covering mock data integrity, component rendering, interactive triage selection, voice recording state, vocabulary mapping validation, UMLS code format checks, and edge/offline system health branching.
+
+```bash
+npm test              # Run all 47 tests
+npm run test:coverage # Coverage report
 npm run lint          # ESLint
 npm run typecheck     # TypeScript check
 npm run build         # Production build
-npm run ci            # Full CI pipeline
+npm run ci            # Full CI pipeline (lint + typecheck + test + build)
 ```
+
+CI runs on Node.js 20, 22, and 24 via GitHub Actions on every push.
 
 ## 📁 Project Structure
 ```
-somapulse/
+devpost-uoe-somapulse/
 ├── docs/              # README assets
 ├── src/
-│   ├── app/           # Next.js pages
-│   └── lib/           # Mock data & utilities
+│   ├── app/           # Next.js pages + __tests__/
+│   └── lib/           # Mock data & utilities + __tests__/
 ├── .github/           # CI workflows
+├── bench.py           # Pipeline latency benchmark script
+├── seed.py            # Deterministic protocol database seeder
 ├── .env.example       # Environment template
 ├── LICENSE            # MIT
 └── README.md          # You are here
 ```
 
-### Acknowledged Limitation
-**Pre-Seeded Knowledge**: The model runs entirely offline. It cannot answer open-ended medical inquiries outside the pre-seeded protocol indexes.
+## Acknowledged Limitation
+**Pre-Seeded Knowledge**: The model runs entirely offline. It cannot answer open-ended medical inquiries outside the pre-seeded protocol indexes. Novel conditions require a new offline sync to expand the local database.
 
 ## 📄 License
 [MIT](LICENSE) © 2026 Edy Cu
