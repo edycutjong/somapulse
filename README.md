@@ -17,7 +17,6 @@
   ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)
   ![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=flat&logo=tailwindcss&logoColor=white)
   ![Python](https://img.shields.io/badge/Python_3.12-3776AB?style=flat&logo=python&logoColor=white)
-  ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
   [![CI](https://github.com/edycutjong/somapulse/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/somapulse/actions/workflows/ci.yml)
 
 </div>
