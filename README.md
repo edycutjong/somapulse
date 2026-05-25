@@ -54,7 +54,7 @@ When disasters strike, **communication grids collapse first**. Rural health work
 
 ### Installation
 ```bash
-git clone https://github.com/edycutjong/devpost-uoe-somapulse.git
+git clone https://github.com/edycutjong/somapulse.git
 cd devpost-uoe-somapulse
 npm install
 cp .env.example .env.local
@@ -71,7 +71,7 @@ npm run ci            # Full CI pipeline
 
 ## 📁 Project Structure
 ```
-devpost-uoe-somapulse/
+somapulse/
 ├── docs/              # README assets
 ├── src/
 │   ├── app/           # Next.js pages

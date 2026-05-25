@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "SomaPulse — Offline-First Medical Triage",
     description:
       "Bringing clinical intelligence to disaster zones with zero internet dependency.",
-    url: "https://devpost-uoe-somapulse.vercel.app",
+    url: "https://somapulse.edycu.dev",
     siteName: "SomaPulse",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "SomaPulse" }],
     locale: "en_US",

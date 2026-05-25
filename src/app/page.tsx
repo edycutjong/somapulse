@@ -66,7 +66,7 @@ function VoiceRecorder({ onSelect }: { onSelect: (idx: number) => void }) {
             )}
             style={{
               height: recording
-                ? `${Math.random() * 48 + 8}px`
+                ? `${((i * 17) % 36) + 12}px`
                 : `${Math.sin(i * 0.3) * 8 + 12}px`,
               animationDelay: `${i * 50}ms`,
             }}
