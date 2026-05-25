@@ -18,7 +18,7 @@
   ![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=flat&logo=tailwindcss&logoColor=white)
   ![Python](https://img.shields.io/badge/Python_3.12-3776AB?style=flat&logo=python&logoColor=white)
   ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
-  [![CI](https://github.com/edycutjong/devpost-uoe-somapulse/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/devpost-uoe-somapulse/actions/workflows/ci.yml)
+  [![CI](https://github.com/edycutjong/somapulse/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/somapulse/actions/workflows/ci.yml)
 
 </div>
 
@@ -56,8 +56,8 @@ When disasters strike, **communication grids collapse first**. Rural health work
 
 ### Installation
 ```bash
-git clone https://github.com/edycutjong/devpost-uoe-somapulse.git
-cd devpost-uoe-somapulse
+git clone https://github.com/edycutjong/somapulse.git
+cd somapulse
 npm install
 cp .env.example .env.local
 npm run dev
@@ -90,7 +90,7 @@ CI runs on Node.js 20, 22, and 24 via GitHub Actions on every push.
 
 ## 📁 Project Structure
 ```
-devpost-uoe-somapulse/
+somapulse/
 ├── docs/              # README assets
 ├── src/
 │   ├── app/           # Next.js pages + __tests__/
