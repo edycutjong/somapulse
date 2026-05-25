@@ -1,4 +1,5 @@
 <div align="center">
+  <img src="public/icon.svg" alt="SomaPulse icon" width="120" height="120">
   <h1>SomaPulse 🩺</h1>
   <p><em>Offline-first medical triage and diagnostic translation at the edge — zero cloud, zero network, zero excuses</em></p>
   <img src="docs/readme-hero.png" alt="SomaPulse" width="100%">
