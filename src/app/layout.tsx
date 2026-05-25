@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://somapulse.edycu.dev"),
   title: "SomaPulse — Offline-First Medical Triage & Diagnostic Translation",
   description:
     "Edge-native medical triage utilizing local speech-to-text and SapBERT semantic search on edge hardware. Zero network dependency.",
