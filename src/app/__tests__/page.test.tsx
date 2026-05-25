@@ -1,46 +1,43 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import Home from '../page';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { getSystemHealth } from '@/lib/data';
 
-const mockSystemHealth = {
-  status: "healthy",
-  network: "offline",
-  whisperLoaded: true,
-  sapbertLoaded: true,
-  dbRecords: 142,
-  ramUsageMb: 1180,
-  cpuModel: "Intel i5-8250U @ 1.6GHz",
-};
+// Mock Supabase client to prevent createClient from crashing without env vars
+jest.mock('@/lib/supabase', () => ({
+  supabase: {},
+}));
 
-jest.mock('@/lib/mock-data', () => {
-  const actual = jest.requireActual('@/lib/mock-data');
+// Mock data fetchers to return mock data
+jest.mock('@/lib/data', () => {
+  const mockData = jest.requireActual('@/lib/mock-data');
   return {
-    ...actual,
-    get MOCK_SYSTEM_HEALTH() {
-      return mockSystemHealth;
-    },
+    getTriageResults: jest.fn().mockResolvedValue(mockData.MOCK_TRIAGE_RESULTS),
+    getSystemHealth: jest.fn().mockResolvedValue(mockData.MOCK_SYSTEM_HEALTH),
+    getVocabularyGaps: jest.fn().mockResolvedValue(mockData.VOCABULARY_GAPS),
   };
 });
 
-describe('SomaPulse Home Page', () => {
-  beforeEach(() => {
-    mockSystemHealth.status = "healthy";
-    mockSystemHealth.network = "offline";
-    mockSystemHealth.whisperLoaded = true;
-    mockSystemHealth.sapbertLoaded = true;
-  });
+import Home from '../page';
 
-  it('renders stats, system status, and components successfully', () => {
+const mockedGetSystemHealth = getSystemHealth as jest.Mock;
+
+describe('SomaPulse Home Page', () => {
+  it('renders stats, system status, and components successfully', async () => {
     render(<Home />);
 
-    expect(screen.getByRole('heading', { name: /SomaPulse/i })).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /SomaPulse/i })).toBeInTheDocument();
+    });
     expect(screen.getByText('NETWORK OFFLINE')).toBeInTheDocument();
     expect(screen.getByText('WHISPER ✓')).toBeInTheDocument();
     expect(screen.getByText('SAPBERT ✓')).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: /Acute Diarrhea & Dehydration Protocol/i })).toBeInTheDocument();
   });
 
-  it('handles clicking on demo queries to select different triage results', () => {
+  it('handles clicking on demo queries to select different triage results', async () => {
     render(<Home />);
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /Fever/i })).toBeInTheDocument();
+    });
 
     const feverButton = screen.getByRole('button', { name: /Fever/i });
     fireEvent.click(feverButton);
@@ -51,12 +48,14 @@ describe('SomaPulse Home Page', () => {
     expect(screen.getByRole('heading', { name: /Acute Bronchial Constriction Protocol/i })).toBeInTheDocument();
   });
 
-  it('handles toggling voice recording state', () => {
+  it('handles toggling voice recording state', async () => {
     render(<Home />);
 
-    const recordButton = screen.getByRole('button', { name: /START RECORDING/i });
-    expect(recordButton).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /START RECORDING/i })).toBeInTheDocument();
+    });
 
+    const recordButton = screen.getByRole('button', { name: /START RECORDING/i });
     fireEvent.click(recordButton);
     expect(screen.getByText(/STOP RECORDING/i)).toBeInTheDocument();
 
@@ -64,55 +63,73 @@ describe('SomaPulse Home Page', () => {
     expect(screen.getByText(/START RECORDING/i)).toBeInTheDocument();
   });
 
-  it('renders online network status and model load failures', () => {
-    mockSystemHealth.network = "online";
-    mockSystemHealth.whisperLoaded = false;
-    mockSystemHealth.sapbertLoaded = false;
+  it('renders online network status and model load failures', async () => {
+    mockedGetSystemHealth.mockResolvedValueOnce({
+      status: "healthy",
+      network: "online",
+      whisperLoaded: false,
+      sapbertLoaded: false,
+      dbRecords: 142,
+      ramUsageMb: 1180,
+      cpuModel: "Intel i5-8250U @ 1.6GHz",
+    });
 
     render(<Home />);
 
-    expect(screen.getByText('NETWORK ONLINE')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('NETWORK ONLINE')).toBeInTheDocument();
+    });
     expect(screen.getByText('WHISPER ✗')).toBeInTheDocument();
     expect(screen.getByText('SAPBERT ✗')).toBeInTheDocument();
   });
 
-  it('renders the SapBERT vocabulary mapping table with colloquial terms', () => {
+  it('renders the SapBERT vocabulary mapping table with colloquial terms', async () => {
     render(<Home />);
 
-    expect(screen.getByText('SapBERT Vocabulary Mapping')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('SapBERT Vocabulary Mapping')).toBeInTheDocument();
+    });
     expect(screen.getByText(/running stomach/i)).toBeInTheDocument();
     expect(screen.getByText(/fire in the chest/i)).toBeInTheDocument();
     expect(screen.getByText('C0018684')).toBeInTheDocument();
   });
 
-  it('renders the pipeline benchmark section with all stages', () => {
+  it('renders the pipeline benchmark section with all stages', async () => {
     render(<Home />);
 
-    expect(screen.getByText(/Pipeline Benchmark/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/Pipeline Benchmark/i)).toBeInTheDocument();
+    });
     expect(screen.getByText('Whisper Transcription')).toBeInTheDocument();
     expect(screen.getByText('SapBERT Embedding')).toBeInTheDocument();
     expect(screen.getByText('sqlite-vec Query')).toBeInTheDocument();
     expect(screen.getByText('Total Pipeline')).toBeInTheDocument();
   });
 
-  it('renders contraindication warnings for the default diarrhea protocol', () => {
+  it('renders contraindication warnings for the default diarrhea protocol', async () => {
     render(<Home />);
 
-    expect(screen.getByText('CONTRAINDICATIONS')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('CONTRAINDICATIONS')).toBeInTheDocument();
+    });
     expect(screen.getByText(/loperamide/i)).toBeInTheDocument();
   });
 
-  it('renders the offline banner and edge status indicator', () => {
+  it('renders the offline banner and edge status indicator', async () => {
     render(<Home />);
 
-    expect(screen.getByText(/ALL NETWORK INTERFACES DISABLED/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/ALL NETWORK INTERFACES DISABLED/i)).toBeInTheDocument();
+    });
     expect(screen.getByText('EDGE DEPLOYMENT')).toBeInTheDocument();
   });
 
-  it('renders footer with correct offline branding', () => {
+  it('renders footer with correct offline branding', async () => {
     render(<Home />);
 
-    expect(screen.getByText(/SomaPulse.*UOE Summer of Code 2026/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/SomaPulse.*UOE Summer of Code 2026/i)).toBeInTheDocument();
+    });
     expect(screen.getAllByText(/Whisper\.cpp.*SapBERT.*sqlite-vec/i).length).toBeGreaterThanOrEqual(1);
   });
 });

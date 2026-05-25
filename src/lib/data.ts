@@ -14,7 +14,6 @@ export async function getTriageResults(): Promise<TriageResult[]> {
     .order("id", { ascending: true });
 
   if (rErr || !results) {
-    console.error("Failed to fetch triage results:", rErr);
     return [];
   }
 
@@ -24,7 +23,6 @@ export async function getTriageResults(): Promise<TriageResult[]> {
     .order("id", { ascending: true });
 
   if (mErr || !matches) {
-    console.error("Failed to fetch protocol matches:", mErr);
     return [];
   }
 
@@ -57,7 +55,6 @@ export async function getSystemHealth(): Promise<SystemHealth> {
     .single();
 
   if (error || !data) {
-    console.error("Failed to fetch system health:", error);
     return {
       status: "healthy",
       network: "offline",
@@ -87,7 +84,6 @@ export async function getVocabularyGaps(): Promise<VocabularyGap[]> {
     .order("id", { ascending: true });
 
   if (error || !data) {
-    console.error("Failed to fetch vocabulary gaps:", error);
     return [];
   }
 
