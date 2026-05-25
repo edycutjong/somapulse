@@ -36,6 +36,39 @@ When disasters strike, **communication grids collapse first**. Rural health work
 - ⚠️ **Drug Contraindication Warnings**: Critical interaction alerts rendered instantly
 - 🔌 **100% Offline**: No network, no cloud API, no subscriptions — runs on a $300 laptop
 
+## 📸 Screenshots
+
+<details>
+<summary><strong>Click to expand all dashboard screenshots</strong></summary>
+
+### Idle State — Ready to Triage
+> Edge system fully operational: Whisper 16-bit GGML loaded, SapBERT ONNX v1.2 ready, 142 protocols indexed, 1180 MB RAM on i5-8250U. Voice waveform visualizer idle. Quick-access demo queries for Diarrhea, Fever, and Breathing visible below the recorder.
+
+<img src="docs/screenshots/idle.png" alt="SomaPulse idle — edge system operational, ready to record" width="100%">
+
+---
+
+### Diarrhea Triage — "running stomach"
+> Transcript: *"having severe watery stool and cramping for two days"*. Matched **Acute Diarrhea & Dehydration Protocol** (Gastroenteritis) at **91.2% similarity** in **118ms**. Action steps include ORS administration and zinc dosage. ⚠️ Contraindications: Do NOT administer antimotility drugs if bloody stool observed.
+
+<img src="docs/screenshots/recording-diarrhea.png" alt="Diarrhea triage — 91.2% match, 118ms latency" width="100%">
+
+---
+
+### Breathing Triage — "chest whistle"
+> Transcript: *"tight breathing heavy lung chest whistle sound for three hours"*. Matched **Acute Bronchial Constriction Protocol** (Asthma/Bronchospasm) at **85.6% similarity** in **102ms**. Action steps: sit upright, salbutamol inhaler, monitor respiratory rate. ⚠️ Do NOT use sedatives.
+
+<img src="docs/screenshots/recording-breathing.png" alt="Breathing triage — 85.6% match, 102ms latency" width="100%">
+
+---
+
+### Fever Triage — "hot body / skin fire"
+> Transcript: *"my child has a hot body shaking skin and cannot swallow water we are at a high elevation camp"*. Matched **Severe Hyperpyrexia & Acute Tonsillitis/Meningitis Protocol** at **88.7% similarity** in **94ms**. 5 action steps including HIGH ELEVATION WARNING. ⚠️ Three contraindications including meningitis rule-out and immediate transport.
+
+<img src="docs/screenshots/recording-fever.png" alt="Fever triage — 88.7% match, 94ms latency, meningitis alert" width="100%">
+
+</details>
+
 ## 🏗️ Architecture & Tech Stack
 
 ```mermaid
