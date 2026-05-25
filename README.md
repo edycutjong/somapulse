@@ -55,6 +55,56 @@ graph TD
 | **NLP Embeddings** | SapBERT (ONNX-runtime, 384-dim biomedical vectors) |
 | **Vector Search** | SQLite + sqlite-vec (cosine similarity) |
 
+## 🗄️ Database Schema
+
+Data is persisted in **Supabase (PostgreSQL)** with Row-Level Security enabled. All tables use the `sp_` prefix to namespace within the shared Supabase instance.
+
+```mermaid
+erDiagram
+    sp_triage_results ||--o{ sp_protocol_matches : "produces"
+    sp_triage_results {
+        serial id PK
+        int latency_ms
+        text transcript
+        timestamptz created_at
+    }
+    sp_protocol_matches {
+        serial id PK
+        int triage_result_id FK
+        int protocol_id
+        text title
+        text clinical_term
+        numeric similarity
+        jsonb steps
+        jsonb warnings
+    }
+    sp_system_health {
+        serial id PK
+        varchar status
+        varchar network
+        boolean whisper_loaded
+        boolean sapbert_loaded
+        int db_records
+        int ram_usage_mb
+        text cpu_model
+    }
+    sp_vocabulary_gaps {
+        serial id PK
+        text colloquial
+        text clinical
+        text umls
+    }
+```
+
+| Table | Purpose | Rows |
+|---|---|---|
+| `sp_triage_results` | Voice triage sessions — transcript text and pipeline latency | 3 |
+| `sp_protocol_matches` | Matched clinical protocols — title, similarity score, action steps, contraindication warnings | 3 |
+| `sp_system_health` | Edge system status — model load state, RAM, CPU, network mode | 1 |
+| `sp_vocabulary_gaps` | SapBERT colloquial→clinical vocabulary mappings with UMLS codes | 5 |
+
+> **RLS Policy**: Anonymous read access enabled on all tables. Write operations require `service_role` key.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
