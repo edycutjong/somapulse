@@ -199,6 +199,22 @@ devpost-uoe-somapulse/
 ## Acknowledged Limitation
 **Pre-Seeded Knowledge**: The model runs entirely offline. It cannot answer open-ended medical inquiries outside the pre-seeded protocol indexes. Novel conditions require a new offline sync to expand the local database.
 
+## 🔨 Built With
+
+- [Next.js 16](https://nextjs.org/) — App Router, React Server Components
+- [React 19](https://react.dev/) — UI framework
+- [TypeScript](https://www.typescriptlang.org/) — Type-safe JavaScript
+- [Tailwind CSS v4](https://tailwindcss.com/) — Utility-first styling
+- [Python 3.12](https://www.python.org/) — Backend runtime
+- [FastAPI](https://fastapi.tiangolo.com/) — Async REST API server
+- [Whisper.cpp](https://github.com/ggerganov/whisper.cpp) — Offline speech-to-text (GGML)
+- [SapBERT](https://huggingface.co/cambridgeltl/SapBERT-from-PubMedBERT-fulltext) — Biomedical entity embeddings (ONNX)
+- [sqlite-vec](https://github.com/asg017/sqlite-vec) — Vector similarity search
+- [SQLite](https://www.sqlite.org/) — Embedded local database
+- [Jest](https://jestjs.io/) — Testing framework (48 passing tests)
+- [GitHub Actions](https://github.com/features/actions) — CI/CD pipeline
+- [Vercel](https://vercel.com/) — Frontend deployment
+
 ## 📄 License
 [MIT](LICENSE) © 2026 Edy Cu
 
