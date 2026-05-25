@@ -52,8 +52,8 @@ describe('SomaPulse Data Integrity', () => {
       expect(validNetworks).toContain(MOCK_SYSTEM_HEALTH.network);
     });
 
-    it('the edge demo is configured with network offline and both models loaded', () => {
-      expect(MOCK_SYSTEM_HEALTH.network).toBe('offline');
+    it('the edge demo is configured with network online and both models loaded', () => {
+      expect(MOCK_SYSTEM_HEALTH.network).toBe('online');
       expect(MOCK_SYSTEM_HEALTH.whisperLoaded).toBe(true);
       expect(MOCK_SYSTEM_HEALTH.sapbertLoaded).toBe(true);
     });

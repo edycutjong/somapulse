@@ -57,7 +57,7 @@ export async function getSystemHealth(): Promise<SystemHealth> {
   if (error || !data) {
     return {
       status: "healthy",
-      network: "offline",
+      network: "online",
       whisperLoaded: true,
       sapbertLoaded: true,
       dbRecords: 142,

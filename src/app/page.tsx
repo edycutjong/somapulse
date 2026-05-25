@@ -281,7 +281,7 @@ export default function Home() {
           <line x1="12" y1="20" x2="12.01" y2="20" />
         </svg>
         <span className="text-[11px] font-mono text-amber-300">
-          ALL NETWORK INTERFACES DISABLED — Running 100% edge-local inference (Whisper.cpp + SapBERT ONNX + sqlite-vec)
+           EDGE-CAPABLE — Running local inference pipeline (Whisper.cpp + SapBERT ONNX + sqlite-vec) · Cloud optional
         </span>
       </div>
 

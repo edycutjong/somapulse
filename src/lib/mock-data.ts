@@ -98,7 +98,7 @@ export const MOCK_TRIAGE_RESULTS: TriageResult[] = [
 
 export const MOCK_SYSTEM_HEALTH: SystemHealth = {
   status: "healthy",
-  network: "offline",
+  network: "online",
   whisperLoaded: true,
   sapbertLoaded: true,
   dbRecords: 142,

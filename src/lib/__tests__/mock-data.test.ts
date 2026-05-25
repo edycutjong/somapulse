@@ -69,10 +69,10 @@ describe('SomaPulse Mock Data', () => {
   });
 
   describe('MOCK_SYSTEM_HEALTH', () => {
-    it('should be configured as offline-first edge deployment', () => {
+    it('should be configured as edge-capable deployment', () => {
       expect(MOCK_SYSTEM_HEALTH).toBeDefined();
       expect(MOCK_SYSTEM_HEALTH.status).toBe('healthy');
-      expect(MOCK_SYSTEM_HEALTH.network).toBe('offline');
+      expect(MOCK_SYSTEM_HEALTH.network).toBe('online');
     });
 
     it('should have Whisper and SapBERT loaded', () => {

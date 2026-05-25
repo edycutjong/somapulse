@@ -27,7 +27,7 @@ describe('SomaPulse Home Page', () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: /SomaPulse/i })).toBeInTheDocument();
     });
-    expect(screen.getByText('NETWORK OFFLINE')).toBeInTheDocument();
+    expect(screen.getByText('NETWORK ONLINE')).toBeInTheDocument();
     expect(screen.getByText('WHISPER ✓')).toBeInTheDocument();
     expect(screen.getByText('SAPBERT ✓')).toBeInTheDocument();
   });
@@ -63,10 +63,10 @@ describe('SomaPulse Home Page', () => {
     expect(screen.getByText(/START RECORDING/i)).toBeInTheDocument();
   });
 
-  it('renders online network status and model load failures', async () => {
+  it('renders offline network status and model load failures', async () => {
     mockedGetSystemHealth.mockResolvedValueOnce({
       status: "healthy",
-      network: "online",
+      network: "offline",
       whisperLoaded: false,
       sapbertLoaded: false,
       dbRecords: 142,
@@ -77,7 +77,7 @@ describe('SomaPulse Home Page', () => {
     render(<Home />);
 
     await waitFor(() => {
-      expect(screen.getByText('NETWORK ONLINE')).toBeInTheDocument();
+      expect(screen.getByText('NETWORK OFFLINE')).toBeInTheDocument();
     });
     expect(screen.getByText('WHISPER ✗')).toBeInTheDocument();
     expect(screen.getByText('SAPBERT ✗')).toBeInTheDocument();
@@ -115,11 +115,11 @@ describe('SomaPulse Home Page', () => {
     expect(screen.getByText(/loperamide/i)).toBeInTheDocument();
   });
 
-  it('renders the offline banner and edge status indicator', async () => {
+  it('renders the edge-capable banner and status indicator', async () => {
     render(<Home />);
 
     await waitFor(() => {
-      expect(screen.getByText(/ALL NETWORK INTERFACES DISABLED/i)).toBeInTheDocument();
+      expect(screen.getByText(/EDGE-CAPABLE/i)).toBeInTheDocument();
     });
     expect(screen.getByText('EDGE DEPLOYMENT')).toBeInTheDocument();
   });
