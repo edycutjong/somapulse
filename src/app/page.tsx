@@ -1,20 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
-  MOCK_TRIAGE_RESULTS,
-  MOCK_SYSTEM_HEALTH,
-  VOCABULARY_GAPS,
   type TriageResult,
+  type SystemHealth,
 } from "@/lib/mock-data";
+import { getTriageResults, getSystemHealth, getVocabularyGaps, type VocabularyGap } from "@/lib/data";
 
 function cn(...classes: (string | false | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 /* ── System Status Bar ── */
-function SystemStatus() {
-  const h = MOCK_SYSTEM_HEALTH;
+function SystemStatus({ health }: { health: SystemHealth }) {
+  const h = health;
   return (
     <div className="flex items-center gap-4 text-[11px] font-mono">
       <div className="flex items-center gap-1.5">
@@ -183,7 +182,7 @@ function TriageResultPanel({ result }: { result: TriageResult }) {
 }
 
 /* ── Vocabulary Gap Table ── */
-function VocabularyTable() {
+function VocabularyTable({ gaps }: { gaps: VocabularyGap[] }) {
   return (
     <div className="glass-card overflow-hidden">
       <div className="px-5 py-3 border-b border-[var(--border)]">
@@ -200,7 +199,7 @@ function VocabularyTable() {
           </tr>
         </thead>
         <tbody>
-          {VOCABULARY_GAPS.map((v, i) => (
+          {gaps.map((v, i) => (
             <tr key={i} className="border-b border-[var(--border)] hover:bg-[var(--surface-hover)] transition-colors">
               <td className="px-5 py-2.5 text-amber-300 italic">&ldquo;{v.colloquial}&rdquo;</td>
               <td className="px-5 py-2.5 text-[var(--primary)]">{v.clinical}</td>
@@ -213,9 +212,45 @@ function VocabularyTable() {
   );
 }
 
+/* ── Loading Skeleton ── */
+function LoadingSkeleton() {
+  return (
+    <div className="flex flex-col min-h-screen items-center justify-center gap-4">
+      <div className="w-8 h-8 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+      <span className="text-xs font-mono text-[var(--text-low)] animate-pulse">
+        Loading from Supabase...
+      </span>
+    </div>
+  );
+}
+
 /* ── Main Page ── */
 export default function Home() {
-  const [selectedResult, setSelectedResult] = useState<TriageResult>(MOCK_TRIAGE_RESULTS[0]);
+  const [triageResults, setTriageResults] = useState<TriageResult[]>([]);
+  const [systemHealth, setSystemHealth] = useState<SystemHealth | null>(null);
+  const [vocabGaps, setVocabGaps] = useState<VocabularyGap[]>([]);
+  const [selectedResult, setSelectedResult] = useState<TriageResult | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const [triage, health, vocab] = await Promise.all([
+        getTriageResults(),
+        getSystemHealth(),
+        getVocabularyGaps(),
+      ]);
+      setTriageResults(triage);
+      setSystemHealth(health);
+      setVocabGaps(vocab);
+      if (triage.length > 0) setSelectedResult(triage[0]);
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  if (loading || !systemHealth || !selectedResult) {
+    return <LoadingSkeleton />;
+  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -230,7 +265,7 @@ export default function Home() {
             EDGE DEPLOYMENT
           </span>
         </div>
-        <SystemStatus />
+        <SystemStatus health={systemHealth} />
       </header>
 
       {/* Offline Banner */}
@@ -257,8 +292,8 @@ export default function Home() {
             { label: "Edge Status", value: "OPERATIONAL", accent: true },
             { label: "Whisper Engine", value: "16-bit GGML" },
             { label: "SapBERT Model", value: "ONNX v1.2" },
-            { label: "Protocols Loaded", value: String(MOCK_SYSTEM_HEALTH.dbRecords) },
-            { label: "RAM Usage", value: `${MOCK_SYSTEM_HEALTH.ramUsageMb}MB` },
+            { label: "Protocols Loaded", value: String(systemHealth.dbRecords) },
+            { label: "RAM Usage", value: `${systemHealth.ramUsageMb}MB` },
             { label: "CPU", value: "i5-8250U" },
           ].map((s, i) => (
             <div key={i} className="glass-card p-4">
@@ -276,7 +311,9 @@ export default function Home() {
         </div>
 
         {/* Voice Input */}
-        <VoiceRecorder onSelect={(i) => setSelectedResult(MOCK_TRIAGE_RESULTS[i])} />
+        <VoiceRecorder onSelect={(i) => {
+          if (triageResults[i]) setSelectedResult(triageResults[i]);
+        }} />
 
         {/* Results + Vocab side by side */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -284,7 +321,7 @@ export default function Home() {
             <TriageResultPanel result={selectedResult} />
           </div>
           <div className="lg:col-span-5 space-y-4">
-            <VocabularyTable />
+            <VocabularyTable gaps={vocabGaps} />
 
             {/* Pipeline Performance */}
             <div className="glass-card p-5">
